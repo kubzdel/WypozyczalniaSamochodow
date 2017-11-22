@@ -1,4 +1,11 @@
 package drools
+
+rule "init"
+when
+then
+    System.out.print("asdsad");
+ end
+
 rule Rezerwacja
 when
 RezerwacjaObject: Rezerwacja()
