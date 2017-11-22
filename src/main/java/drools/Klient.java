@@ -1,5 +1,10 @@
 package drools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Klient {
-    private boolean lojalnosciowy = false;
+    public boolean lojalnosciowy = false;
+    public List<Rezerwacja> rezerwacje = new ArrayList<>();
+
 }
