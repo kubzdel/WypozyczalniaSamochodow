@@ -22,7 +22,8 @@ public class Main {
         Logger.getLogger(Main.class).setLevel(Level.OFF);
         KieContainer kContainer = ks.getKieClasspathContainer();
         KieSession session = kContainer.newKieSession("ksession-rules");
-      // tutaj dodać obiekty session.insert
+        Rezerwacja rezerwacja = new Rezerwacja();
+        session.insert(rezerwacja);
         session.fireAllRules();
     }
 }
