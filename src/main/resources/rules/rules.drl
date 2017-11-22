@@ -1,1 +1,7 @@
 package drools
+rule Rezerwacja
+when
+RezerwacjaObject: Rezerwacja()
+then
+
+end
