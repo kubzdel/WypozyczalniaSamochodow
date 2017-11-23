@@ -4,11 +4,83 @@ rule "init"
 when
 then
     System.out.print("asdsad");
+    insert(Samochod)
  end
 
 rule Rezerwacja
 when
-RezerwacjaObject: Rezerwacja()
+rezerwacja: Rezerwacja()
 then
-
+ System.out.println("rezerwacja");
+ //insert(rezerwacja.dlugosc);
 end
+
+
+rule WynajemOd1Do3
+when
+rezerwacja: Rezerwacja(dlugosc<4)
+then
+ rezerwacja.stawka+=69;
+ //update(rezerwacja);
+ end
+
+ rule WynajemPowyzej3
+ when
+ rezerwacja: Rezerwacja(dlugosc>3)
+ then
+  rezerwacja.stawka+=59;
+ // rezerwacja.dlugosc=0;
+ // update(rezerwacja);
+  end
+
+
+rule preferencjaB
+when
+rezerwacja: Rezerwacja(preferencja==preferencja.B)
+then
+rezerwacja.stawka+=10;
+//update(rezerwacja);
+ end
+
+ rule preferencjaD
+ when
+ rezerwacja: Rezerwacja(preferencja==preferencja.D)
+ then
+ rezerwacja.stawka+=20;
+ //update(rezerwacja);
+  end
+
+  rule fotelik
+  when
+  rezerwacja: Rezerwacja(fotelik==true)
+  then
+   rezerwacja.stawka+=10;
+   end
+
+  rule bagaznik
+    when
+    rezerwacja: Rezerwacja(bagaznik==true)
+    then
+     rezerwacja.stawka+=10;
+     end
+
+   rule znizka
+      when
+      rezerwacja: Rezerwacja(klient.lojalnosciowy==true ,fotelik==true || bagaznik== true)
+      then
+      rezerwacja.stawka-=10;
+       end
+
+    rule wypozyczenie
+    when
+    rezerwacja:Rezerwacja()
+    then
+    System.out.println(rezerwacja.dlugosc);
+     rezerwacja.wypozyczenie=(int)rezerwacja.dlugosc*rezerwacja.stawka;
+     end
+
+
+
+
+
+
