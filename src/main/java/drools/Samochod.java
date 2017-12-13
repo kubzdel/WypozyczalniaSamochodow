@@ -1,9 +1,9 @@
 package drools;
 
 public class Samochod {
-    private static int iloscA=5;
-    private static int iloscB=5;
-    private static int iloscC=5;
+    public static int iloscA=2;
+    public static int iloscB=1;
+    public static int iloscD=2;
     public enum Kategoria
     {
         A,

@@ -1,83 +1,176 @@
 package drools
+import drools.Samochod
 
 rule "init"
 when
 then
-    System.out.print("asdsad");
-    insert(Samochod)
+
  end
 
-rule Rezerwacja
+
+rule nakladanieDat
 when
-rezerwacja: Rezerwacja()
+rezerwacja: Rezerwacja(klient.czyDatySieNakladaja(rezerwacja,klient.rezerwacje)==true)
+then rezerwacja.rezerwacjaNiemozliwa=true;
+System.out.println("niedobrze");
+ end
+
+// ????????
+ rule dozwoloneDaty
+ when
+ rezerwacja: Rezerwacja(klient.czyDatySieNakladaja(rezerwacja,klient.rezerwacje)==false)
+ then rezerwacja.klient.rezerwacje.add(rezerwacja);
+ System.out.println(33);
+  end
+
+
+
+
+
+rule preferencjaA
+when
+rezerwacja: Rezerwacja(preferencja==preferencja.A, samochod.iloscA>0)
+
 then
- System.out.println("rezerwacja");
- //insert(rezerwacja.dlugosc);
-end
+rezerwacja.samochod.iloscA-=1;
+ end
+
+ rule brakA
+ when
+ rezerwacja: Rezerwacja(preferencja==preferencja.A, samochod.iloscA<1)
+
+ then
+ rezerwacja.stawka-=10;
+ rezerwacja.preferencja=Samochod.Kategoria.B;
+ update(rezerwacja);
+  end
+
+
+
+
+rule preferencjaB
+when
+rezerwacja: Rezerwacja(preferencja==preferencja.B, samochod.iloscB>0)
+
+then
+rezerwacja.stawka+=10;
+rezerwacja.samochod.iloscB-=1;
+ end
+
+ rule brakB
+  when
+  rezerwacja: Rezerwacja(preferencja==preferencja.B, samochod.iloscB<1)
+
+  then
+  rezerwacja.stawka-=10;
+  rezerwacja.preferencja=Samochod.Kategoria.D;
+  System.out.println(rezerwacja.stawka);
+  update(rezerwacja);
+   end
+
+ rule preferencjaD
+ when
+ rezerwacja: Rezerwacja(preferencja==preferencja.D, samochod.iloscD>0)
+ then
+ rezerwacja.stawka+=20;
+ rezerwacja.samochod.iloscD-=1;
+  end
+
+  rule brakD
+   when
+   rezerwacja: Rezerwacja(preferencja==preferencja.D, samochod.iloscD<1, rezerwacjaNiemozliwa==false)
+
+   then
+   rezerwacja.rezerwacjaNiemozliwa=true;
+   System.out.println("ssss");
+   update(rezerwacja);
+    end
+
+  rule wypozyczenieNiemozliwe
+           when
+           rezerwacja:Rezerwacja(rezerwacjaNiemozliwa==true)
+
+           then
+           System.out.println("Rezerwacja niemozliwa");
+
+            end
 
 
 rule WynajemOd1Do3
 when
-rezerwacja: Rezerwacja(dlugosc<4)
+rezerwacja: Rezerwacja(dlugosc<4, rezerwacjaNiemozliwa==false)
 then
  rezerwacja.stawka+=69;
+ rezerwacja.zwrot.stawkaKM=1;
  //update(rezerwacja);
  end
 
  rule WynajemPowyzej3
  when
- rezerwacja: Rezerwacja(dlugosc>3)
+ rezerwacja: Rezerwacja(dlugosc>3, rezerwacjaNiemozliwa==false)
  then
   rezerwacja.stawka+=59;
- // rezerwacja.dlugosc=0;
- // update(rezerwacja);
+  rezerwacja.zwrot.stawkaKM=0.5;
   end
 
-
-rule preferencjaB
-when
-rezerwacja: Rezerwacja(preferencja==preferencja.B)
-then
-rezerwacja.stawka+=10;
-//update(rezerwacja);
- end
-
- rule preferencjaD
- when
- rezerwacja: Rezerwacja(preferencja==preferencja.D)
- then
- rezerwacja.stawka+=20;
- //update(rezerwacja);
-  end
 
   rule fotelik
   when
-  rezerwacja: Rezerwacja(fotelik==true)
+  rezerwacja: Rezerwacja(fotelik==true, rezerwacjaNiemozliwa==false)
   then
-   rezerwacja.stawka+=10;
+   rezerwacja.wypozyczenie+=10;
    end
 
   rule bagaznik
     when
-    rezerwacja: Rezerwacja(bagaznik==true)
+    rezerwacja: Rezerwacja(bagaznik==true, rezerwacjaNiemozliwa==false)
     then
-     rezerwacja.stawka+=10;
+     rezerwacja.wypozyczenie+=10;
      end
 
    rule znizka
       when
-      rezerwacja: Rezerwacja(klient.lojalnosciowy==true ,fotelik==true || bagaznik== true)
+      rezerwacja: Rezerwacja(klient.lojalnosciowy==true ,fotelik==true || bagaznik== true, rezerwacjaNiemozliwa==false)
       then
-      rezerwacja.stawka-=10;
+      rezerwacja.wypozyczenie-=10;
        end
+
+    rule brakKolpakow
+        when
+        rezerwacja: Rezerwacja(zwrot.zgubioneKolpaki>0, rezerwacjaNiemozliwa==false)
+        then
+        rezerwacja.zwrot.sumaZwrot+=20*rezerwacja.zwrot.zgubioneKolpaki;
+        end
+
+    rule brakDowodu
+            when
+            rezerwacja: Rezerwacja(zwrot.brakDowodu==true, rezerwacjaNiemozliwa==false)
+            then
+            rezerwacja.zwrot.sumaZwrot+=500;
+            end
+
+     rule opoznienie
+        when
+        rezerwacja: Rezerwacja(opoznienie>0, rezerwacjaNiemozliwa==false)
+        then
+        rezerwacja.zwrot.sumaZwrot+=rezerwacja.opoznienie*rezerwacja.stawka*3;
+         end
+
+
 
     rule wypozyczenie
     when
-    rezerwacja:Rezerwacja()
+    rezerwacja:Rezerwacja(rezerwacjaNiemozliwa==false)
     then
-    System.out.println(rezerwacja.dlugosc);
-     rezerwacja.wypozyczenie=(int)rezerwacja.dlugosc*rezerwacja.stawka;
+    System.out.println(rezerwacja.opoznienie);
+     rezerwacja.wypozyczenie+=(int)rezerwacja.dlugosc*rezerwacja.stawka;
+     rezerwacja.zwrot.sumaZwrot+=(int)rezerwacja.zwrot.przejechaneKM*rezerwacja.zwrot.stawkaKM;
+     System.out.println("SUMA Wypozyczenie " + rezerwacja.wypozyczenie+"zł");
+     System.out.println("SUMA Oddanie " + rezerwacja.zwrot.sumaZwrot+"zł");
+     System.out.println("SUMA  " + (rezerwacja.wypozyczenie+ rezerwacja.zwrot.sumaZwrot)+"zł");
      end
+
+
 
 
 
