@@ -1,5 +1,7 @@
 package drools;
 
+import java.util.HashMap;
+
 public class Samochod {
     public static int iloscA=2;
     public static int iloscB=1;
@@ -10,7 +12,5 @@ public class Samochod {
         B,
         D
     }
-
-
 
 }

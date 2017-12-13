@@ -17,6 +17,7 @@ public class Rezerwacja {
     public long opoznienie;
     public Zwrot zwrot;
     public boolean rezerwacjaNiemozliwa;
+    public boolean dodanoDoKlienta;
 
     public Date getDataZwrotu() {
         return dataZwrotu;

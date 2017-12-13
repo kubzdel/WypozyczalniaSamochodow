@@ -10,16 +10,19 @@ then
 
 rule nakladanieDat
 when
-rezerwacja: Rezerwacja(klient.czyDatySieNakladaja(rezerwacja,klient.rezerwacje)==true)
+rezerwacja: Rezerwacja(klient.czyDatySieNakladaja(rezerwacja,klient.rezerwacje)==true, rezerwacjaNiemozliwa==false)
 then rezerwacja.rezerwacjaNiemozliwa=true;
 System.out.println("niedobrze");
+update(rezerwacja);
  end
 
 // ????????
  rule dozwoloneDaty
  when
- rezerwacja: Rezerwacja(klient.czyDatySieNakladaja(rezerwacja,klient.rezerwacje)==false)
+ rezerwacja: Rezerwacja(klient.czyDatySieNakladaja(rezerwacja,klient.rezerwacje)==false,dodanoDoKlienta==false)
  then rezerwacja.klient.rezerwacje.add(rezerwacja);
+ rezerwacja.dodanoDoKlienta=true;
+ update(rezerwacja);
  System.out.println(33);
   end
 

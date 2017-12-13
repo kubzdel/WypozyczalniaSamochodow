@@ -69,7 +69,7 @@ public class Main {
         rezerwacja2.bagaznik=true;
         rezerwacja2.samochod= new Samochod();
         rezerwacja2.zwrot = new Zwrot();
-        rezerwacja2.zwrot.dataZwrotu = formatter.parse("2016/11/14");
+        rezerwacja2.zwrot.dataZwrotu = formatter.parse("2016/11/15");
         rezerwacja2.zwrot.przejechaneKM = 100;
         rezerwacja2.setDlugosc();
         rezerwacja2.setOpoznienie();
