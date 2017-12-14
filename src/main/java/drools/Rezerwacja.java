@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Rezerwacja {
 
+    public String nazwa;
     public boolean fotelik;
     public boolean bagaznik;
     public Date dataWynajmu;
@@ -11,7 +12,7 @@ public class Rezerwacja {
     public int stawka = 0;
     public Klient klient;
     public int wypozyczenie = 0;
-    public Samochod.Kategoria preferencja = Samochod.Kategoria.A;
+    public Samochod.Kategoria preferencja;
     public Samochod samochod;
     public long dlugosc;
     public long opoznienie;
@@ -31,6 +32,31 @@ public class Rezerwacja {
         this.opoznienie = (zwrot.dataZwrotu.getTime() - dataZwrotu.getTime()) / ((24 * 60 * 60 * 1000));
 
     }
+
+    public Rezerwacja(String nazwa, Klient klient, Date dataWynajmu, Date dataZwrotu, Samochod.Kategoria preferencja,boolean fotelik, boolean bagaznik)
+    {
+        this.nazwa=nazwa;
+        this.klient=klient;
+        this.dataWynajmu=dataWynajmu;
+        this.dataZwrotu=dataZwrotu;
+        this.preferencja=preferencja;
+        this.fotelik=fotelik;
+        this.bagaznik=bagaznik;
+
+    }
+
+    public Rezerwacja(String nazwa, Klient klient, Date dataWynajmu, Date dataZwrotu,boolean fotelik, boolean bagaznik)
+    {
+        this.nazwa=nazwa;
+        this.klient=klient;
+        this.dataWynajmu=dataWynajmu;
+        this.dataZwrotu=dataZwrotu;
+        this.preferencja= Samochod.Kategoria.A;
+        this.fotelik=fotelik;
+        this.bagaznik=bagaznik;
+
+    }
+
 
 }
 
